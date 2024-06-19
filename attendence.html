@@ -8,14 +8,9 @@
     <!--FontAwesome cdn-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!--Boxicons-->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -31,7 +26,7 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="/index.html" class="sidebar-link">
+                    <a href="/" class="sidebar-link">
                         <i class="lni lni-user"></i>
                         <span>Dashboard</span>
                     </a>
@@ -161,11 +156,12 @@
             <main class="content px-3 py-4">
                 <div class="container-fluid">
                     <div class="mb-3">
-                        <h3 class="fw-bold fs-4 mb-3">Admin Dashboard</h3>
-                        <button id="addTaskBtn" class="btn btn-primary mb-3">Add New Client</button>
+                        <h3 class="fw-bold fs-4 mb-3">Attendance</h3>
+                        <button id="addClientBtn" class="btn btn-primary mb-3">Add New Client</button>
+                        </h3>
                         <div class="row">
                             <div class="col-12">
-                                <table id="taskTable" class="table table-striped">
+                                <table id="clientTable" class="table table-striped">
                                     <thead>
                                         <tr class="highlight">
                                             <th scope="col">S.no</th>
@@ -176,7 +172,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Task rows will be dynamically added here -->
+                                        <tr>
+                                            <td>1</td>
+                                            <td>John Doe</td>
+                                            <td>ABC Company</td>
+                                            <td>New York</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Jane Smith</td>
+                                            <td>XYZ Corporation</td>
+                                            <td>Los Angeles</td>
+                                        </tr>
+                                        <!-- Table rows will be dynamically added here -->
                                     </tbody>
                                 </table>
                             </div>
@@ -184,38 +192,6 @@
                     </div>
                 </div>
             </main>
-            <!-- Modal for adding new client -->
-<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addClientModalLabel">Add New Client</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addClientForm">
-                    <div class="mb-3">
-                        <label for="clientName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="clientName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clientCompany" class="form-label">Company</label>
-                        <input type="text" class="form-control" id="clientCompany" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clientLocation" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="clientLocation" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveClientBtn">Save Client</button>
-            </div>
-        </div>
-    </div>
-</div>
-
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row text-body-secondary">
@@ -242,87 +218,40 @@
             </footer>
         </div>
     </div>
+    <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClientModalLabel">Add/Edit Client</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addClientForm">
+                        <div class="mb-3">
+                            <label for="clientName" class="form-label">Client Name</label>
+                            <input type="text" class="form-control" id="clientName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="companyName" class="form-label">Company Name</label>
+                            <input type="text" class="form-control" id="companyName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="saveClientBtn" class="btn btn-primary">Save Client</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-    <script>
-        
-        document.addEventListener('DOMContentLoaded', function () {
-    const addClientBtn = document.getElementById('addTaskBtn');
-    const addClientModal = new bootstrap.Modal(document.getElementById('addClientModal'));
-    const clientTable = document.getElementById('taskTable');
-    const saveClientBtn = document.getElementById('saveClientBtn');
-    const addClientForm = document.getElementById('addClientForm');
-    let editingClientRow = null;
-
-    addClientBtn.addEventListener('click', function () {
-        addClientForm.reset();
-        editingClientRow = null;
-        addClientModal.show();
-    });
-
-    saveClientBtn.addEventListener('click', function () {
-        const clientName = document.getElementById('clientName').value.trim();
-        const clientCompany = document.getElementById('clientCompany').value.trim();
-        const clientLocation = document.getElementById('clientLocation').value.trim();
-
-        if (clientName && clientCompany && clientLocation) {
-            if (editingClientRow) {
-                editingClientRow.cells[1].innerText = clientName;
-                editingClientRow.cells[2].innerText = clientCompany;
-                editingClientRow.cells[3].innerText = clientLocation;
-            } else {
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <th scope="row">${clientTable.rows.length}</th>
-                    <td>${clientName}</td>
-                    <td>${clientCompany}</td>
-                    <td>${clientLocation}</td>
-                    <td>
-                        <button class="btn btn-success btn-sm view-btn"><i class="fa-solid fa-eye"></i></button>
-                        <button class="btn btn-warning btn-sm edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="btn btn-danger btn-sm delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                clientTable.querySelector('tbody').appendChild(newRow);
-            }
-            addClientModal.hide();
-            updateSerialNumbers();
-        } else {
-            alert('Please fill out all fields.');
-        }
-    });
-
-    clientTable.addEventListener('click', function (event) {
-        const target = event.target;
-        const row = target.closest('tr');
-
-        if (target.classList.contains('delete-btn')) {
-            row.remove();
-            updateSerialNumbers();
-        } else if (target.classList.contains('view-btn')) {
-            const clientName = row.cells[1].innerText;
-            const clientCompany = row.cells[2].innerText;
-            const clientLocation = row.cells[3].innerText;
-            alert(`Client Name: ${clientName}\nCompany: ${clientCompany}\nLocation: ${clientLocation}`);
-        } else if (target.classList.contains('edit-btn')) {
-            document.getElementById('clientName').value = row.cells[1].innerText;
-            document.getElementById('clientCompany').value = row.cells[2].innerText;
-            document.getElementById('clientLocation').value = row.cells[3].innerText;
-            editingClientRow = row;
-            addClientModal.show();
-        }
-    });
-
-    function updateSerialNumbers() {
-        const rows = clientTable.querySelectorAll('tbody tr');
-        rows.forEach((row, index) => {
-            row.querySelector('th').textContent = index + 1;
-        });
-    }
-});
-
-
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

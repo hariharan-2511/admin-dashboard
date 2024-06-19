@@ -31,7 +31,7 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="/index.html" class="sidebar-link">
+                    <a href="/" class="sidebar-link">
                         <i class="lni lni-user"></i>
                         <span>Dashboard</span>
                     </a>
@@ -161,17 +161,19 @@
             <main class="content px-3 py-4">
                 <div class="container-fluid">
                     <div class="mb-3">
-                        <h3 class="fw-bold fs-4 mb-3">Admin Dashboard</h3>
-                        <button id="addTaskBtn" class="btn btn-primary mb-3">Add New Client</button>
+                        <h3 class="fw-bold fs-4 mb-3">Task Management</h3>
+                        <button id="addTaskBtn" class="btn btn-primary mb-3">Add New Task</button>
                         <div class="row">
                             <div class="col-12">
                                 <table id="taskTable" class="table table-striped">
                                     <thead>
                                         <tr class="highlight">
                                             <th scope="col">S.no</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Company</th>
-                                            <th scope="col">Location</th>
+                                            <th scope="col">Student Name</th>
+                                            <th scope="col">Course</th>
+                                            <th scope="col">Task Name</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Status</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -184,38 +186,50 @@
                     </div>
                 </div>
             </main>
-            <!-- Modal for adding new client -->
-<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addClientModalLabel">Add New Client</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addClientForm">
-                    <div class="mb-3">
-                        <label for="clientName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="clientName" required>
+            <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addTaskModalLabel">Add/Edit Task</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addTaskForm">
+                                <div class="mb-3">
+                                    <label for="stud_Name" class="form-label">Student Name</label>
+                                    <input type="text" class="form-control" id="stud_Name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="course" class="form-label">Course</label>
+                                    <input type="text" class="form-control" id="course" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="taskName" class="form-label">Task Name</label>
+                                    <input type="text" class="form-control" id="taskName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="taskDescription" class="form-label">Task Description</label>
+                                    <textarea class="form-control" id="taskDescription" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="taskStatus" class="form-label">Task Status</label>
+                                    <select class="form-control" id="taskStatus" required>
+                                        <option value="Not Taken">Not Taken</option>
+                                        <option value="Taken">Taken</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" id="saveTaskBtn" class="btn btn-primary">Save Task</button>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="clientCompany" class="form-label">Company</label>
-                        <input type="text" class="form-control" id="clientCompany" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="clientLocation" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="clientLocation" required>
-                    </div>
-                </form>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveClientBtn">Save Client</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+            
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row text-body-secondary">
@@ -247,53 +261,60 @@
         crossorigin="anonymous"></script>
     <script>
         
-        document.addEventListener('DOMContentLoaded', function () {
-    const addClientBtn = document.getElementById('addTaskBtn');
-    const addClientModal = new bootstrap.Modal(document.getElementById('addClientModal'));
-    const clientTable = document.getElementById('taskTable');
-    const saveClientBtn = document.getElementById('saveClientBtn');
-    const addClientForm = document.getElementById('addClientForm');
-    let editingClientRow = null;
+       document.addEventListener('DOMContentLoaded', function () {
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const addTaskModal = new bootstrap.Modal(document.getElementById('addTaskModal'));
+    const taskTable = document.getElementById('taskTable');
+    const saveTaskBtn = document.getElementById('saveTaskBtn');
+    const addTaskForm = document.getElementById('addTaskForm');
+    let editingTaskRow = null;
 
-    addClientBtn.addEventListener('click', function () {
-        addClientForm.reset();
-        editingClientRow = null;
-        addClientModal.show();
+    addTaskBtn.addEventListener('click', function () {
+        addTaskForm.reset();
+        editingTaskRow = null;
+        addTaskModal.show();
     });
 
-    saveClientBtn.addEventListener('click', function () {
-        const clientName = document.getElementById('clientName').value.trim();
-        const clientCompany = document.getElementById('clientCompany').value.trim();
-        const clientLocation = document.getElementById('clientLocation').value.trim();
+    saveTaskBtn.addEventListener('click', function () {
+        const studName = document.getElementById('stud_Name').value.trim();
+        const course = document.getElementById('course').value.trim();
+        const taskName = document.getElementById('taskName').value.trim();
+        const taskDescription = document.getElementById('taskDescription').value.trim();
+        const taskStatus = document.getElementById('taskStatus').value.trim();
 
-        if (clientName && clientCompany && clientLocation) {
-            if (editingClientRow) {
-                editingClientRow.cells[1].innerText = clientName;
-                editingClientRow.cells[2].innerText = clientCompany;
-                editingClientRow.cells[3].innerText = clientLocation;
+        if (studName && course && taskName && taskDescription && taskStatus) {
+            if (editingTaskRow) {
+                editingTaskRow.cells[1].innerText = studName;
+                editingTaskRow.cells[2].innerText = course;
+                editingTaskRow.cells[3].innerText = taskName;
+                editingTaskRow.cells[4].innerText = taskDescription;
+                editingTaskRow.cells[5].innerText = taskStatus;
             } else {
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
-                    <th scope="row">${clientTable.rows.length}</th>
-                    <td>${clientName}</td>
-                    <td>${clientCompany}</td>
-                    <td>${clientLocation}</td>
+                    <th scope="row">${taskTable.rows.length}</th>
+                    <td>${studName}</td>
+                    
+                    <td>${course}</td>
+                    <td>${taskName}</td>
+                    <td>${taskDescription}</td>
+                    <td>${taskStatus}</td>
                     <td>
                         <button class="btn btn-success btn-sm view-btn"><i class="fa-solid fa-eye"></i></button>
                         <button class="btn btn-warning btn-sm edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button class="btn btn-danger btn-sm delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
-                clientTable.querySelector('tbody').appendChild(newRow);
+                taskTable.querySelector('tbody').appendChild(newRow);
             }
-            addClientModal.hide();
+            addTaskModal.hide();
             updateSerialNumbers();
         } else {
             alert('Please fill out all fields.');
         }
     });
 
-    clientTable.addEventListener('click', function (event) {
+    taskTable.addEventListener('click', function (event) {
         const target = event.target;
         const row = target.closest('tr');
 
@@ -301,27 +322,30 @@
             row.remove();
             updateSerialNumbers();
         } else if (target.classList.contains('view-btn')) {
-            const clientName = row.cells[1].innerText;
-            const clientCompany = row.cells[2].innerText;
-            const clientLocation = row.cells[3].innerText;
-            alert(`Client Name: ${clientName}\nCompany: ${clientCompany}\nLocation: ${clientLocation}`);
+            const studName = row.cells[1].innerText;
+            const course = row.cells[2].innerText;
+            const taskName = row.cells[3].innerText;
+            const taskDescription = row.cells[4].innerText;
+            const taskStatus = row.cells[5].innerText;
+            alert(`Student Name: ${studName}\nCourse: ${course}\nTask Name: ${taskName}\nDescription: ${taskDescription}\nStatus: ${taskStatus}`);
         } else if (target.classList.contains('edit-btn')) {
-            document.getElementById('clientName').value = row.cells[1].innerText;
-            document.getElementById('clientCompany').value = row.cells[2].innerText;
-            document.getElementById('clientLocation').value = row.cells[3].innerText;
-            editingClientRow = row;
-            addClientModal.show();
+            document.getElementById('stud_Name').value = row.cells[1].innerText;
+            document.getElementById('course').value = row.cells[2].innerText;
+            document.getElementById('taskName').value = row.cells[3].innerText;
+            document.getElementById('taskDescription').value = row.cells[4].innerText;
+            document.getElementById('taskStatus').value = row.cells[5].innerText;
+            editingTaskRow = row;
+            addTaskModal.show();
         }
     });
 
     function updateSerialNumbers() {
-        const rows = clientTable.querySelectorAll('tbody tr');
+        const rows = taskTable.querySelectorAll('tbody tr');
         rows.forEach((row, index) => {
             row.querySelector('th').textContent = index + 1;
         });
     }
 });
-
 
     </script>
 </body>

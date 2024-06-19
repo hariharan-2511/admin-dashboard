@@ -63,12 +63,15 @@ body {
 
 .sidebar-logo {
     margin: auto 0;
+
 }
 
 .sidebar-logo a {
     color: #FFF;
     font-size: 1.15rem;
     font-weight: 600;
+    transition: color 0.3s ease-in-out, font-size 0.3s ease-in-out;
+    transition-delay: 0.2s;
 }
 
 #sidebar:not(.expand) .sidebar-logo,
